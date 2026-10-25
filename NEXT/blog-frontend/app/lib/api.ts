@@ -1,73 +1,68 @@
-const BASE_URL = 'http://localhost:8000/api';
+const SUPABASE_URL = 'https://ysuzcsyvpuebxywjsxdg.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_AA_UQ8l8-nV2gH-MPDc7aQ_l9k9Dgww';
 
 const getHeaders = () => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token_ecommerce');
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-    };
-  }
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
   };
 };
 
 export const apiEcommerce = {
-  // --- AUTENTICACIÓN ---
+  // --- AUTENTICACIÓN (Simulada para mantener tu AuthBox intacto localmente) ---
   async login(credentials: { email: string; password: string }) {
-    const res = await fetch(`${BASE_URL}/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(credentials),
-    });
-    if (!res.ok) throw new Error('Error al iniciar sesión');
-    return res.json();
+    // Para la entrega puedes simular un login exitoso local
+    return {
+      token: 'supabase_mock_token',
+      user: { id: 1, name: 'Administrador Supabase', email: credentials.email }
+    };
   },
 
-  // --- CATÁLOGO DE PRODUCTOS (CRUD) ---
+  // --- CATÁLOGO DE PRODUCTOS DESDE SUPABASE ---
   async getProducts() {
-    const res = await fetch(`${BASE_URL}/products`, { method: 'GET', headers: getHeaders() });
-    if (!res.ok) throw new Error('Error al obtener productos');
+    // Al añadir ?select=* Supabase te devuelve todas las filas en formato JSON de inmediato
+    const res = await fetch(`${SUPABASE_URL}/products?select=*`, { 
+      method: 'GET', 
+      headers: getHeaders() 
+    });
+    if (!res.ok) throw new Error('Error al obtener productos desde Supabase');
     return res.json();
   },
 
   async createProduct(productData: { name: string; description: string; price: number }) {
-    const res = await fetch(`${BASE_URL}/products`, {
+    const res = await fetch(`${SUPABASE_URL}/products`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(productData),
     });
-    if (!res.ok) throw new Error('No autorizado o error al crear producto');
-    return res.json();
+    if (!res.ok) throw new Error('Error al crear producto en la nube');
+    return { success: true };
   },
 
   async updateProduct(id: string, productData: Partial<{ name: string; description: string; price: number }>) {
-    const res = await fetch(`${BASE_URL}/products/${id}`, {
-      method: 'PUT',
+    // Supabase filtra usando parámetros en la URL (ej. ?id=eq.5)
+    const res = await fetch(`${SUPABASE_URL}/products?id=eq.${id}`, {
+      method: 'PATCH', // Supabase prefiere PATCH para actualizaciones parciales
       headers: getHeaders(),
       body: JSON.stringify(productData),
     });
-    if (!res.ok) throw new Error('No autorizado o error al editar producto');
-    return res.json();
+    if (!res.ok) throw new Error('Error al editar producto en la nube');
+    return { success: true };
   },
 
   async deleteProduct(id: string) {
-    const res = await fetch(`${BASE_URL}/products/${id}`, { method: 'DELETE', headers: getHeaders() });
-    if (!res.ok) throw new Error('No autorizado o error al eliminar producto');
-    return res.json();
+    const res = await fetch(`${SUPABASE_URL}/products?id=eq.${id}`, { 
+      method: 'DELETE', 
+      headers: getHeaders() 
+    });
+    if (!res.ok) throw new Error('Error al eliminar producto en la nube');
+    return { success: true };
   },
 
-  // --- PASARELA DE PAGOS (STRIPE SIMULADO) ---
+  // --- PASARELA DE PAGOS ---
   async checkout(cartItems: any[]) {
-    const res = await fetch(`${BASE_URL}/checkout`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ items: cartItems }),
-    });
-    if (!res.ok) throw new Error('Error en el procesamiento del pago');
-    return res.json();
+    alert('Simulación de pago completada con los productos en línea.');
+    return { success: true };
   }
 };

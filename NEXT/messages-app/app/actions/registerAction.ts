@@ -1,7 +1,7 @@
 import { error } from "console";
-import { supabase } from "../repositories/supabase";
+import { supabaseAdmin } from "../repositories/supabase";
 
-async function registerAction(formData: FormData){
+export async function registerAction(formData: FormData){
     //Obtengo los DATOS con GET
    const name =  formData.get('name') as string;
    const email =  formData.get('email') as string;

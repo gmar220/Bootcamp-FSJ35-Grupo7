@@ -1,6 +1,7 @@
 import { Message } from "../types";
 
 export function MessageBubble({ message }: { message: Message }) {
+
   return (
     <div className={`flex flex-col ${message.isSelf ? "items-end" : "items-start"}`}>
       <div
@@ -10,7 +11,7 @@ export function MessageBubble({ message }: { message: Message }) {
             : "rounded-tl-none bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
         }`}
       >
-        <p>{message.content}</p>
+    {message.content}
       </div>
       <span className="mt-1 text-[11px] text-neutral-400">{message.createdAt}</span>
     </div>
