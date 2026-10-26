@@ -1,0 +1,37 @@
+
+# Dependencias locales
+node_modules
+
+# Salida de compilaciones anteriores
+.next
+out
+build
+dist
+
+# Git y herramientas del editor
+.git
+.github
+.vscode
+.idea
+
+# Variables de entorno: no copiarlas a la imagen
+.env
+.env.*
+!.env.example
+!.env.docker.example
+
+# Logs y cachés
+*.log
+.npm
+.cache
+*.tsbuildinfo
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Docker y documentación
+Dockerfile*
+docker-compose*.yml
+compose*.yaml
+README*

@@ -1,0 +1,2 @@
+-- Opcional: scripts SQL ejecutados solo al inicializar un volumen vacío.
+-- Las migraciones de Laravel se ejecutan desde el contenedor backend.
